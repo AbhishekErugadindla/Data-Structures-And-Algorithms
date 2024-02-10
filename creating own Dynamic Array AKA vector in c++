@@ -1,0 +1,67 @@
+#include <iostream>
+using namespace std;
+
+class DynamicArray{
+        int *a,siz,cap;
+        public:
+        DynamicArray(){
+            a=NULL;
+            siz=0,cap=0;
+        }
+void push(int num){
+    if(siz<cap){
+        a[siz]=num;
+        siz++;
+    }
+    else{
+        int *b;
+        if(cap>0){
+            b=new int[2*cap];
+            cap*=2;
+        }
+        if(cap==0){
+            b=new int[1];
+            cap=1;
+        }
+        for(int i=0;i<siz;i++) b[i]=a[i];
+        delete [] a;
+        a=b;
+
+        a[siz]=num;
+        siz++;
+    
+        
+    }
+}
+
+int size(){
+    return siz;
+}
+int capacity(){
+    return cap;
+}
+void pop(){
+    a[siz-1]=0,siz--;
+}
+
+int operator[](int i){
+    if(i>=0 && i<siz) return a[i];
+    else return -1;
+}
+            
+};
+int main() {
+    DynamicArray v;
+    v.push(7);
+        v.push(6);
+
+        v.push(5);
+
+        v.push(4);
+       cout<<v[v.size()-1];
+    v.pop();
+           cout<<v.capacity();
+
+
+    return 0;
+}
