@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+
+void maxExceptElement(int arr1[],int n,int queries[],int m){
+    int first_largest=INT_MIN,second_largest=INT_MIN;
+    int arr[n];
+    for(int i=0;i<n;i++){
+        arr[i]=i==0?arr1[i]:max(arr1[i-1],arr1[i]);
+    }
+    for(int i=0;i<n;i++){
+        if(arr[i]>first_largest){
+            second_largest=first_largest;
+            first_largest=arr[i];
+        }
+        else if(arr[i]>second_largest&&(arr[i]<first_largest)){
+            second_largest=arr[i];
+        }
+    }
+    int current_index;
+    for(int i=0;i<m;i++){
+        current_index=queries[i];
+        if(arr[current_index]==first_largest){
+            cout<<second_largest<<endl;
+        }else cout<<first_largest<<endl;
+    }
+    
+    
+}
+
+int main() {
+    int n,m;
+    cin>>n>>m;
+    int queries[m];
+    int arr[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    for(int i=0;i<m;i++){
+        cin>>queries[i];
+    }
+    maxExceptElement(arr,n,queries,m);
+    
+    return 0;
+}
