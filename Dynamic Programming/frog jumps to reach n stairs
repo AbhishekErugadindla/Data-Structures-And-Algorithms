@@ -1,0 +1,102 @@
+//Problem Statement
+//A Frog is situated on the first step of an N-stairs-long staircase. The Frog aspires to reach the Nth stair. Also, the height of the ith stair is represented by height[i-1]. The energy lost during a jump from the ith to the jth stair is determined by the absolute value of the difference between the height[i-1] and the height[j-1].
+
+//When Frog is on the ith stair, it has the option to jump either to the i+1th stair or the i+2th stair. Your objective is to determine the minimum total energy expended 
+
+//using Recursion
+#include<bits/stdc++.h>
+using namespace std;
+
+int minStepCost(int i,int arr[]){
+    if(i==0) return 0;
+    if(i==1) return abs(arr[1]-arr[0]);
+    
+  
+    
+    int s1=abs(arr[i]-arr[i-1])+minStepCost(i-1,arr,dp);
+    int s2=abs(arr[i]-arr[i-2])+minStepCost(i-2,arr,dp);
+    int minimum=min(s1,s2);
+    return minimum;
+    
+}
+
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  int arr[n];
+  for(int i=0;i<n;i++) cin>>arr[i];
+ 
+  int minCost=minStepCost( n-1, arr);
+  cout<<minCost<<endl;
+  return 0;
+}
+
+//using memoization
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int minStepCost(int i,int arr[],vector<int> &dp){
+    if(i==0) return 0;
+    if(i==1) return abs(arr[1]-arr[0]);
+    
+    if(dp[i]!=-1) return dp[i];
+    
+    int s1=abs(arr[i]-arr[i-1])+minStepCost(i-1,arr,dp);
+    int s2=abs(arr[i]-arr[i-2])+minStepCost(i-2,arr,dp);
+    int minimum=min(s1,s2);
+    dp[i]=minimum;
+    return dp[i];
+    
+}
+
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  int arr[n];
+  for(int i=0;i<n;i++) cin>>arr[i];
+  vector<int> dp(n,-1);
+  dp[0]=0,dp[1]=abs(arr[1]-arr[0]);
+  int minCost=minStepCost( n-1, arr,dp);
+  cout<<minCost<<endl;
+  return 0;
+}
+
+
+//using optimized tabulation instead of using array
+#include<bits/stdc++.h>
+using namespace std;
+
+int minStepCost(int i,int arr[]){
+    if(i==0) return 0;
+    if(i==1) return abs(arr[1]-arr[0]);
+    
+    int prev_1=abs(arr[1]-arr[0]);
+    int prev_2=0;
+    int s1,s2;
+     int minimum;
+    for(int j=2;j<=i;j++){
+        s1=abs(arr[j]-arr[j-1])+prev_1;
+        s2=abs(arr[j]-arr[j-2])+prev_2;
+        minimum=min(s1,s2);
+        prev_2=prev_1;
+        prev_1=minimum;
+    }
+    return minimum;
+    
+}
+
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  int arr[n];
+  for(int i=0;i<n;i++) cin>>arr[i];
+//   vector<int> dp(n,-1);
+//   dp[0]=0,dp[1]=abs(arr[1]-arr[0]);
+  int minCost=minStepCost( n-1, arr);
+  cout<<minCost<<endl;
+  return 0;
+} 
