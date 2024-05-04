@@ -1,0 +1,66 @@
+frog jump II
+reach to n with min jumps
+
+//memoization tc:O(n*K) sc:O(n+n)
+
+#include<bits/stdc++.h>
+using namespace std;
+int minimumEnergy(int arr[],int i,int k,vector<int>& dp){
+    if(i==0) return 0;
+    
+    if(dp[i]!=-1) return dp[i];
+    int min_energy=INT_MAX;
+    int energy;
+    for(int j=1;j<=k;j++){
+        if(i-j>=0){
+            
+        energy=abs(arr[i]-arr[i-j])+minimumEnergy(arr,i-j,k,dp);
+        min_energy=min(energy,min_energy);
+        }
+    }
+    dp[i]=min_energy;
+    return dp[i];
+    
+}
+int main() {
+  // write your code here...
+  int n,k;
+  cin>>n>>k;
+  int arr[n];
+  for(int i=0;i<n;i++) cin>>arr[i];
+  vector<int> dp(n,-1);
+  cout<<minimumEnergy(arr,n-1,k,dp);
+  return 0;
+}
+//tabulation tc:O(n*K) sc:O(n)
+
+#include<bits/stdc++.h>
+using namespace std;
+int minimumEnergy(int arr[],int n,int k,vector<int>& dp){
+    if(n==0) return 0;
+    dp[0]=0;
+         for(int i=1;i<=n;i++){
+             int min_energy=INT_MAX;
+    int energy;
+    for(int j=1;j<=k;j++){
+        if(i-j>=0){
+            
+        energy=abs(arr[i]-arr[i-j])+dp[i-j];
+        min_energy=min(energy,min_energy);
+        } 
+    }
+    dp[i]=min_energy;}
+    return dp[n];
+    
+}
+int main() {
+  // write your code here...
+  int n,k;
+  cin>>n>>k;
+  int arr[n];
+  for(int i=0;i<n;i++) cin>>arr[i];
+  vector<int> dp(n,-1);
+  cout<<minimumEnergy(arr,n-1,k,dp);
+  return 0;
+}
+
