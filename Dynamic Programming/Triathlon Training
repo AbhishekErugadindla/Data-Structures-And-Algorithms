@@ -1,0 +1,166 @@
+Triathlon Training
+Problem Statement :
+An athlete is undergoing a training schedule for 'N' days, with the option to engage in three different activities each day: Running, Cycling, or Swimming. Each activity yields a certain number of points daily. 
+
+To enhance all of his skills, the athlete is constrained from repeating the same activity on consecutive days. Can you assist the athlete in determining the maximum points he can accumulate?
+
+You are provided with a 2D array of size N*3, representing the points associated with each day and activity. 
+
+Your objective is to compute the highest possible number of points that an athlete can achieve.
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int maximizeSport(int i,vector<vector<int>> &arr,int sport){
+    if(i<0) return 0;
+    int left=maximizeSport(i-1,arr,(sport+1)%3);
+    int right=maximizeSport(i-1,arr,(sport+2)%3);
+    return arr[i][sport]+max(left,right);
+}
+
+
+int training(int n,vector<vector<int>> &arr){
+    int a=maximizeSport(n,arr,0);
+    int b=maximizeSport(n,arr,1);
+    int c=maximizeSport(n,arr,2);
+    
+    return max(max(a,b),c);
+}
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  vector<vector<int>> arr(n,vector<int>(3));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<3;j++) cin>>arr[i][j];
+  }
+  cout<<training(n-1,arr);
+  return 0;
+}
+
+memoization
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int maximizeSport(int i,vector<vector<int>> &arr,int sport,vector<vector<int>> &dp){
+    if(i<0) return 0;
+    if(dp[i][sport]!=-1) return dp[i][sport];
+    int left=maximizeSport(i-1,arr,(sport+1)%3,dp);
+    int right=maximizeSport(i-1,arr,(sport+2)%3,dp);
+    return dp[i][sport]=arr[i][sport]+max(left,right);
+}
+
+
+int training(int n,vector<vector<int>> &arr){
+    vector<vector<int>> dp(n+1,vector<int>(3,-1));
+    int a=maximizeSport(n,arr,0,dp);
+    int b=maximizeSport(n,arr,1,dp);
+    int c=maximizeSport(n,arr,2,dp);
+    
+    return max(max(a,b),c);
+}
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  vector<vector<int>> arr(n,vector<int>(3));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<3;j++) cin>>arr[i][j];
+  }
+  cout<<training(n-1,arr);
+  return 0;
+}
+
+//tabulation sc:O(n*3) tc:O(n*3)
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int maximizeSport(int i,vector<vector<int>> &arr,int sport,vector<vector<int>> &dp){
+    if(i<0) return 0;
+    dp[0][0]=arr[0][0];
+    dp[0][1]=arr[0][1];
+    dp[0][2]=arr[0][2];
+    
+    for(int j=1;j<=i;j++){
+        for(int k=0;k<3;k++){
+            int left=arr[j][k]+dp[j-1][(sport+1)%3];
+            int right=arr[j][k]+dp[j-1][(sport+2)%3];
+            dp[j][k]=max(left,right);
+        }
+    }
+
+    return dp[i][sport];
+}
+
+
+int training(int n,vector<vector<int>> &arr){
+    vector<vector<int>> dp(n+1,vector<int>(3,-1));
+    int a=maximizeSport(n,arr,0,dp);
+    int b=maximizeSport(n,arr,1,dp);
+    int c=maximizeSport(n,arr,2,dp);
+    
+    return max(max(a,b),c);
+}
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  vector<vector<int>> arr(n,vector<int>(3));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<3;j++) cin>>arr[i][j];
+  }
+  cout<<training(n-1,arr);
+  return 0;
+}
+
+//optimal tabulation sc:O(3)+O(3)=O(1),tc:O(n*3)
+
+#include<bits/stdc++.h>
+using namespace std;
+
+
+
+
+    
+
+
+
+int training(int i,vector<vector<int>> &arr){
+      if(i<0) return 0;
+    int prev[3];
+    int curr[3];
+    prev[0]=arr[0][0];
+    prev[1]=arr[0][1];
+    prev[2]=arr[0][2];
+    
+    for(int j=1;j<=i;j++){
+        for(int k=0;k<3;k++){
+            int left=arr[j][k]+prev[(k+1)%3];
+            int right=arr[j][k]+prev[(k+2)%3];
+            curr[k]=max(left,right);
+        }
+         prev[0]=curr[0];
+         prev[1]=curr[1];
+         prev[2]=curr[2];
+    }
+    
+    
+    return max(max(curr[0],curr[1]),curr[0]);
+}
+int main() {
+  // write your code here...
+  int n;
+  cin>>n;
+  vector<vector<int>> arr(n,vector<int>(3));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<3;j++) cin>>arr[i][j];
+  }
+  cout<<training(n-1,arr);
+  return 0;
+}
