@@ -1,0 +1,46 @@
+Problem Statement :
+
+You're an expert thief scheming to rob houses along a circular street. Each house has a specific amount of money hidden. 
+
+The twist is that all the houses form a circle, with the first house being next to the last one. 
+
+Additionally, neighboring houses have a security system that calls the police if two adjacent houses are burglarized on the same night.
+
+Given an integer array ‘arr’ representing the amount of money in each house, your task is to find the maximum amount of money you can steal tonight without triggering the police.
+
+
+class Solution {
+public:
+   int houseRobber(int i,vector<int>&nums){
+        if(i==0) return nums[0];
+        if(i==1) return max(nums[0],nums[1]);
+
+        int pick_2=nums[0];
+        int pick_1= max(nums[0],nums[1]);
+
+        for(int j=2;j<=i;j++){
+            int pick=nums[j]+pick_2;
+            int not_pick=pick_1;
+            int curr=max(pick,not_pick);
+            pick_2=pick_1;
+            pick_1=curr;
+
+        }
+        return pick_1;
+    }
+    int rob(vector<int>& nums) {
+        int n=nums.size();
+        if(n==1) return nums[0];
+        vector<int> arr1(n-1),arr2(n-1);
+
+        for(int i=0;i<=n-2;i++){
+            arr1[i]=nums[i];
+            arr2[i]=nums[i+1];
+        }
+
+        int x=houseRobber(n-2,arr1);
+        int y=houseRobber(n-2,arr2);
+
+        return max(x,y);
+    }
+};
