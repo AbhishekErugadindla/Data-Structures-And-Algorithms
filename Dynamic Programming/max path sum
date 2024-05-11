@@ -1,0 +1,105 @@
+//memoization tc:O(n*m) sc:O(n)+O(m*n)
+#include<bits/stdc++.h>
+using namespace std;
+
+int maxPathSum(int i,int j,int n,int m,vector<vector<int>>&arr,vector<vector<int>>&dp){
+    if(j<0 || j>m) return INT_MIN;
+    if(i==n) return arr[i][j];
+    if(dp[i][j]!=-1) return dp[i][j];
+    
+    int left=maxPathSum(i+1,j-1,n,m,arr,dp);
+    int down=maxPathSum(i+1,j,n,m,arr,dp);
+    int right=maxPathSum(i+1,j+1,n,m,arr,dp);
+    
+    return dp[i][j]=arr[i][j]+max(left,max(down,right));
+}
+int maxSum(int m,int n,vector<vector<int>> &arr){
+    int maximum=INT_MIN;
+    vector<vector<int>> dp(n+1,vector<int>(m+1,-1));
+    for(int i=0;i<=m;i++){
+        int curr=maxPathSum(0,i,n,m,arr,dp);
+        maximum=max(maximum,curr);
+    }
+    return maximum;
+}
+int main() {
+  // write your code here...
+  int n,m;
+  cin>>n>>m;
+  vector<vector<int>> arr(n,vector<int>(m));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<m;j++) cin>>arr[i][j];
+  }
+  cout<<maxSum(m-1,n-1,arr);
+  return 0;
+}
+//tabulation tc:O(n*m) sc:O(n*m)
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int maxSum(int m,int n,vector<vector<int>> &arr){
+    int maximum=INT_MIN;
+    vector<vector<int>> dp(n+1,vector<int>(m+1));
+    for(int i=0;i<=m;i++) dp[n][i]=arr[n][i];
+    
+    for(int i=n-1;i>=0;i--){
+        for(int j=0;j<=m;j++){
+            int left=INT_MIN,right=INT_MIN;
+            if(j>0) left=dp[i+1][j-1];
+            int down=dp[i+1][j];
+            if(j<m) right=dp[i+1][j+1];
+            dp[i][j]=arr[i][j]+max(left,max(down,right));
+        }
+    }
+    
+    for(int i=0;i<=m;i++) maximum=max(maximum,dp[0][i]);
+    return maximum;
+}
+int main() {
+  // write your code here...
+  int n,m;
+  cin>>n>>m;
+  vector<vector<int>> arr(n,vector<int>(m));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<m;j++) cin>>arr[i][j];
+  }
+  cout<<maxSum(m-1,n-1,arr);
+  return 0;
+}
+//tabulation with optimized sc sc:O(m+m) tc:O(n*m)
+#include<bits/stdc++.h>
+using namespace std;
+
+
+int maxSum(int m,int n,vector<vector<int>> &arr){
+    int maximum=INT_MIN;
+    vector<int> prev(m+1);
+    vector<int> curr(m+1);
+    for(int i=0;i<=m;i++) prev[i]=arr[n][i];
+    
+    for(int i=n-1;i>=0;i--){
+        for(int j=0;j<=m;j++){
+            int left=INT_MIN,right=INT_MIN;
+            if(j>0) left=prev[j-1];
+            int down=prev[j];
+            if(j<m) right=prev[j+1];
+           curr[j]=arr[i][j]+max(left,max(down,right));
+        }
+        prev=curr;
+    }
+    
+    for(int i=0;i<=m;i++) maximum=max(maximum,prev[i]);
+    return maximum;
+}
+int main() {
+  // write your code here...
+  int n,m;
+  cin>>n>>m;
+  vector<vector<int>> arr(n,vector<int>(m));
+  for(int i=0;i<n;i++){
+      for(int j=0;j<m;j++) cin>>arr[i][j];
+  }
+  cout<<maxSum(m-1,n-1,arr);
+  return 0;
+}
