@@ -1,0 +1,73 @@
+import java.util.*;
+
+
+ class Node{
+    int data;
+    Node left;
+    Node right;
+    public Node(int data){
+        this.data=data;
+        left=null;
+        right=null;
+    }
+}
+
+class PreOrderTraversal{
+     public  void preorder(Node root){
+     if(root==null) return;
+     System.out.print(root.data+" ");
+     preorder(root.left);
+     preorder(root.right);
+ }
+   
+}
+
+class InOrderTraversal{
+    public void inorder(Node root){
+        if(root==null) return;
+        inorder(root.left);
+        System.out.print(root.data+" ");
+        inorder(root.right);
+    }
+}
+
+class PostOrderTraversal{
+    public void postorder(Node root){
+        if(root==null) return;
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.data+" ");
+    }
+}
+
+class BinaryTree {
+    
+    
+ 
+  public static void main(String[] args) {
+    // Write your code here...
+    Node root=new Node(1);
+    root.left=new Node(2);
+    root.right=new Node(3);
+    root.left.left=new Node(4);
+    root.left.right=new Node(5);
+    root.left.right.right=new Node(8);
+    root.right.left=new Node(6);
+    root.right.right=new Node(7);
+    
+    PreOrderTraversal pr=new PreOrderTraversal();
+    pr.preorder(root);
+    
+    System.out.println();
+    
+    InOrderTraversal in = new InOrderTraversal();
+    in.inorder(root);
+    
+    System.out.println();
+    
+    PostOrderTraversal ps=new PostOrderTraversal();
+    ps.postorder(root);
+    
+    
+    }
+}
